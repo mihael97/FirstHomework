@@ -3,180 +3,146 @@ package hr.fer.zemris.java.hw01;
 import java.util.Scanner;
 
 /**
- * Javna klasa koja implementira binarno stablo u kojg dodajemo vrijednosti
- * koristeci standardni ulaz
- * 
- * @author Mihael
+ * Binary tree
  *
+ * @author Mihael
  */
 public class UniqueNumbers {
 
-	/**
-	 * Glavni program koji nam omogucuje upis podataka u stablo koristeci scanner i
-	 * unos kroz standardni ulaz
-	 * 
-	 * @param args
-	 *            - ne koristi se
-	 */
-	public static void main(String[] args) {
-		try (Scanner sc = new Scanner(System.in)) {
-			String line = new String();
-			TreeNode head = null;
-			int value;
+    /**
+     * Main method
+     *
+     * @param args not in use
+     */
+    public static void main(String[] args) {
+        try (Scanner sc = new Scanner( System.in )) {
+            String line;
+            TreeNode head = null;
+            int value;
 
-			while (true) {
-				System.out.println("Unesite broj>");
-				if ((line = sc.nextLine()).equals("kraj")) {
-					break;
-				}
+            while (true) {
+                System.out.println( "Unesite broj>" );
+                if ((line = sc.nextLine()).equals( "kraj" )) {
+                    break;
+                }
 
-				try {
-					value = Integer.parseInt(line);
-					if (containsValue(head, value)) {
-						System.out.println("Broj vec postoji. Preskacem!");
-					} else {
-						head = addNode(head, value);
-						System.out.println("Dodano!");
-					}
-				} catch (NumberFormatException e) {
-					// TODO: handle exception
-					System.out.println("\'" + line + "\' nije cijeli broj!");
-				}
-			}
+                try {
+                    value = Integer.parseInt( line );
 
-			System.out.println(" Ispis od najmanjeg:");
-			least(head);
+                    head = addNode( head, value );
 
-			System.out.println("\n Ispis od najveceg:");
-			largest(head);
-		} catch (Exception e) {
-			System.err.println("Problemi sa scannerom!");
-		}
-	}
+                } catch (NumberFormatException e) {
+                    System.out.println( "\'" + line + "\' nije cijeli broj!" );
+                }
+            }
 
-	/**
-	 * Javna metoda koja dodaje vrijednost u stablo samo u slucaju ako vrijednost
-	 * vec ne postoji
-	 * 
-	 * @param head
-	 *            - referenca na trenutnu glavu
-	 * @param value
-	 *            vrijednost koju zelimo dodati
-	 * @return referenca na glavu
-	 */
-	public static TreeNode addNode(TreeNode head, int value) {
-		if (head == null) {
-			return new TreeNode(null, null, value);
-		} else if (head.value == value) {
-			return head;
-		} else if (head.value > value) {
-			head.left = addNode(head.left, value);
-		} else {
-			head.right = addNode(head.right, value);
-		}
+            System.out.println( " Ispis od najmanjeg:" );
+            least( head );
 
-		return head;
-	}
+            System.out.println( "\n Ispis od najveceg:" );
+            largest( head );
+        } catch (Exception e) {
+            System.err.println( "Problemi sa scannerom!" );
+        }
+    }
 
-	/**
-	 * Privatna metoda koja ispisuje stablo od najmanjeg clana prema vecem koristeci
-	 * rekurzivni inorder prolazak po stablu
-	 * 
-	 * @param head
-	 *            - referenca na glavu
-	 */
-	private static void least(TreeNode head) {
-		if (head == null) {
-			return;
-		}
+    /**
+     * Method adds value inside tree
+     *
+     * @param head  reference to tree head
+     * @param value value for add
+     * @return modified tree head
+     */
+    public static TreeNode addNode(TreeNode head, int value) {
+        if (head == null) {
+            System.out.println( "Dodan!" );
+            return new TreeNode( null, null, value );
+        } else if (head.value == value) {
+            System.out.println( "Broj " + value + " vec postoji!" );
+            return head;
+        } else if (head.value > value) {
+            head.left = addNode( head.left, value );
+        } else {
+            head.right = addNode( head.right, value );
+        }
 
-		least(head.left);
-		System.out.printf(" %d ", head.value);
-		least(head.right);
-	}
+        return head;
+    }
 
-	/**
-	 * Privatna metoda koja ispisuje stablo od najveceg clana prema manjem koristeci
-	 * rekurzvni prolazak po stablu
-	 * 
-	 * @param head
-	 *            - referenca na glavu
-	 */
-	private static void largest(TreeNode head) {
-		if (head == null) {
-			return;
-		}
+    /**
+     * Prints tree recursively from lowest to largest element
+     *
+     * @param head head reference
+     */
+    private static void least(TreeNode head) {
+        if (head == null) {
+            return;
+        }
 
-		least(head.right);
-		System.out.printf(" %d ", head.value);
-		largest(head.left);
-	}
+        least( head.left );
+        System.out.printf( " %d ", head.value );
+        least( head.right );
+    }
 
-	/**
-	 * Javna metoda koja provjerava nalazi li se vrijednost vec u stablu
-	 * 
-	 * @param head
-	 *            - glava stabla
-	 * @param value
-	 *            - trazena vrijednost
-	 * @return - true ako se nalazi,inace false
-	 */
-	public static boolean containsValue(TreeNode head, int value) {
-		if (head == null) {
-			return false;
-		} else if (head.value == value) {
-			return true;
-		} else if (head.value > value) {
-			containsValue(head.left, value);
-		} else {
-			containsValue(head.right, value);
-		}
+    /**
+     * Prints tree recursively from largest to lowest element
+     *
+     * @param head head reference
+     */
+    private static void largest(TreeNode head) {
+        if (head == null) {
+            return;
+        }
 
-		return false;
-	}
+        largest( head.right );
+        System.out.printf( " %d ", head.value );
+        largest( head.left );
+    }
 
-	/**
-	 * Javna metoda koja rekurzivno racuna velicinu stabla
-	 * 
-	 * @param head
-	 *            - referenca na glavu
-	 * @return velicinu stabla u obliku cijelog broja
-	 */
-	public static int treeSize(TreeNode head) {
-		if (head == null) {
-			return 0;
-		} else {
-			return treeSize(head.left) + treeSize(head.right) + 1;
-		}
-	}
+    /**
+     * Calculates tree size recursively
+     *
+     * @param head head reference
+     * @return tree size
+     */
+    public static int treeSize(TreeNode head) {
+        if (head == null) {
+            return 0;
+        } else {
+            return treeSize( head.left ) + treeSize( head.right ) + 1;
+        }
+    }
 
-	/**
-	 * Javna staticka klasa koja implementira clana stabla. Varijable su left i
-	 * right kao reference na susjede i value kao vrijednost
-	 * 
-	 * @author Mihael
-	 *
-	 */
-	public static class TreeNode {
-		private TreeNode left;
-		private TreeNode right;
-		private int value;
+    /**
+     * Tree node
+     *
+     * @author Mihael
+     */
+    public static class TreeNode {
+        /**
+         * Left neighbour
+         */
+        private TreeNode left;
+        /**
+         * Right neighbour
+         */
+        private TreeNode right;
+        /**
+         * Value
+         */
+        private int value;
 
-		/**
-		 * Javni konstructor koji stvara novi list
-		 * 
-		 * @param left
-		 *            - referenca na lijevog susjeda
-		 * @param right
-		 *            - referenca na desnog susjeda
-		 * @param value
-		 *            - vrijednost lista
-		 */
-		public TreeNode(TreeNode left, TreeNode right, int value) {
-			// TODO Auto-generated constructor stub
-			this.left = left;
-			this.right = right;
-			this.value = value;
-		}
-	}
+        /**
+         * Constructor
+         *
+         * @param left  left neighbour
+         * @param right right neighbour
+         * @param value value
+         */
+        public TreeNode(TreeNode left, TreeNode right, int value) {
+            this.left = left;
+            this.right = right;
+            this.value = value;
+        }
+    }
 }
